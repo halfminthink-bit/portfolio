@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!doctype html>
 <html lang="ja">
 <head>
@@ -99,10 +100,8 @@
   </footer>
 </main>
 <script>
+  /* テキストは変更せず、年だけ自動挿入（JS不要方針の場合は削除可） */
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.documentElement.classList.add('fx');
-  }
 </script>
 </body>
 </html>
