@@ -1,108 +1,201 @@
-/* Advanced visuals */
 :root{
-  --acc:#7cc4ff; --ok:#4bd39a; --warn:#ffb86b;
-  --bg:#0b0f14; --bg-2:#111725; --card:#121b2b; --line:#223145;
-  --ink:#ecf2f9; --mut:#9fb0c7;
-  --glass: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-  --shadow: 0 18px 40px rgba(0,0,0,.35);
-  --r:18px; --w:1100px; --gap:20px;
+/ colors (grayscale only) /
+--bg: #0b0f14; / page background /
+--card: #111720; / card surface /
+--ink: #eef3f7; / primary text /
+--muted: #9aa7b5; / secondary text /
+--line: #283244; / separators */
+
+/* layout */
+--maxw: 1040px;
+--gap: 20px;
+--radius: 12px;
 }
+
+/* Light scheme */
 @media (prefers-color-scheme: light){
-  :root{ --bg:#f5f7fb; --bg-2:#fff; --card:#ffffff; --line:#e7ecf4;
-    --ink:#0f1726; --mut:#54657c;
-    --glass: linear-gradient(180deg, rgba(0,0,0,.03), rgba(0,0,0,.01));
-    --shadow: 0 14px 30px rgba(8,26,61,.12);
-  }
+:root{
+--bg:#f6f8fb; --card:#ffffff;
+--ink:#0f1726; --muted:#5a6a7d;
+--line:#e2e8f0;
 }
-*{box-sizing:border-box}
-html,body{height:100%}
+}
+
+/* ==============================
+Base
+============================== */
+
+{ box-sizing: border-box; }
+html, body { height: 100%; }
 body{
-  margin:0; color:var(--ink);
-  background:
-    radial-gradient(1200px 800px at 110% -10%, #13243a 0%, transparent 45%),
-    radial-gradient(1000px 700px at -10% -10%, #0f1a2d 0%, transparent 40%),
-    var(--bg);
-  font:16px/1.7 ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
-       'Hiragino Kaku Gothic ProN', 'Noto Sans JP', Meiryo, sans-serif;
-  accent-color:var(--acc);
+margin: 0;
+color: var(--ink);
+background: var(--bg);
+font: 16px/1.7 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+"Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
 }
-@media (prefers-reduced-motion: reduce){
-  *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
+
+/* Links: static (no hover change) */
+a{
+color: var(--ink);
+text-decoration: underline;
+text-decoration-color: color-mix(in oklab, var(--ink) 40%, transparent);
+text-underline-offset: 2px;
 }
-.pf{max-width:var(--w); margin:0 auto; padding:34px 20px 80px}
-h1,h2,h3{margin:0 0 10px; line-height:1.25}
-h1{font-size:clamp(24px, 3.6vw, 34px); letter-spacing:.2px; font-weight:800}
-h2{font-size:clamp(20px, 2.6vw, 26px); font-weight:800}
-.hd{display:inline-flex; align-items:center; gap:.6ch; position:relative}
+
+/* Focus visibility (keyboard) */
+:focus-visible{
+outline: 2px solid color-mix(in oklab, var(--ink) 70%, #fff 0%);
+outline-offset: 2px;
+}
+
+/* ==============================
+Typography
+============================== */
+h1,h2,h3{ margin: 0 0 10px; line-height: 1.25; font-weight: 800; }
+h1{ font-size: clamp(24px, 3.2vw, 34px); letter-spacing: .2px; }
+h2{ font-size: clamp(20px, 2.6vw, 26px); }
+h3{ font-size: clamp(18px, 2.2vw, 20px); font-weight: 800; }
+p{ margin: 8px 0; }
+.muted{ color: var(--muted); }
+
+/* Section heading accent (monotone) */
+.hd{
+display: inline-flex; gap: .6ch; align-items: center; position: relative;
+}
 .hd::after{
-  content:""; width:42px; height:8px;
-  background:linear-gradient(90deg, var(--acc), var(--ok));
-  border-radius:999px;
-  mask: radial-gradient(12px 8px at 0 50%, #000 98%, transparent 100%) left / 50% 100% no-repeat,
-        radial-gradient(12px 8px at 100% 50%, #000 98%, transparent 100%) right / 50% 100% no-repeat;
-  -webkit-mask: radial-gradient(12px 8px at 0 50%, #000 98%, transparent 100%) left / 50% 100% no-repeat,
-                radial-gradient(12px 8px at 100% 50%, #000 98%, transparent 100%) right / 50% 100% no-repeat;
+content:""; width: 40px; height: 6px; border-radius: 999px;
+background: linear-gradient(90deg, #fff 0, #bbb 100%);
+opacity: .2;
 }
-.hd--sm{font-size:clamp(18px, 2.2vw, 20px); font-weight:800}
-.muted{color:var(--mut); margin:10px 0 2px}
-.hero{display:flex; flex-wrap:wrap; gap:var(--gap); align-items:center; justify-content:space-between; margin-bottom:18px}
-.hero__brand{display:flex; align-items:center; gap:14px}
-.hero__title{display:block}
-.hero__title span{font-weight:700; color:var(--mut)}
-.hero__tag{margin:4px 0 0; font-weight:700; color:var(--acc)}
-.logo{width:58px; height:58px; filter: drop-shadow(var(--shadow)); border-radius:14px}
-.hero__nav{display:flex; flex-wrap:wrap; gap:10px}
-.hero__nav a{
-  padding:8px 12px; color:var(--ink); text-decoration:none; font-weight:700;
-  border-radius:999px; border:1px solid rgba(255,255,255,.12);
-  background:var(--glass); backdrop-filter:saturate(150%) blur(8px);
-}
-.hero__nav a:hover{transform:translateY(-1px)}
-.fx .hero__nav a{transition:transform .25s ease}
-.section{margin:14px 0}
+
+/* ==============================
+Layout
+============================== */
+.pf{ max-width: var(--maxw); margin: 0 auto; padding: 32px 20px 72px; }
+.section{ margin: 16px 0; }
+
+/* Cards (monotone glass-like without blur) */
 .card{
-  background:var(--glass); border:1px solid rgba(255,255,255,.10);
-  border-radius:var(--r); padding:22px; box-shadow:var(--shadow);
-  backdrop-filter: blur(10px) saturate(140%);
+background:
+linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+border: 1px solid color-mix(in oklab, var(--line) 100%, transparent 0%);
+border-radius: var(--radius);
+padding: 22px;
 }
-.grid{display:grid; gap:var(--gap); grid-template-columns:1fr}
-@media (min-width: 860px){ .grid{grid-template-columns:1fr 1fr} }
-.case .list{margin:8px 0 0 18px}
-.case .list li{padding:2px 0}
-.chips{display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:8px 0 0; list-style:none}
+
+/* Grid for cases */
+.grid{
+display: grid; gap: var(--gap);
+grid-template-columns: 1fr;
+}
+@media (min-width: 860px){
+.grid{ grid-template-columns: 1fr 1fr; }
+}
+
+/* ==============================
+Hero
+============================== */
+.hero{
+display: flex; flex-wrap: wrap; gap: var(--gap);
+align-items: center; justify-content: space-between;
+margin-bottom: 16px;
+}
+.hero__brand{ display: flex; align-items: center; gap: 14px; }
+.hero__title span{ color: var(--muted); font-weight: 700; }
+.hero__tag{ margin: 4px 0 0; font-weight: 700; color: var(--muted); }
+
+/* Inline nav chips (static) /
+.hero__nav{ display: flex; flex-wrap: wrap; gap: 10px; }
+.hero__nav a{
+display: inline-block;
+padding: 8px 12px;
+color: var(--ink);
+text-decoration: none; / ナビは下線なし */
+border: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+border-radius: 999px;
+background: color-mix(in oklab, var(--card) 82%, transparent);
+}
+
+/* Logo SVG sizing */
+.logo{ width: 56px; height: 56px; border-radius: 12px; }
+
+/* ==============================
+Components
+============================== /
+/ Chips */
+.chips{
+display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 8px 0 0;
+list-style: none;
+}
 .chips li{
-  --b: rgba(255,255,255,.14);
-  border:1px solid var(--b);
-  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-  color:var(--ink); font-weight:700;
-  padding:8px 14px; border-radius:999px; letter-spacing:.2px;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+border: 1px solid color-mix(in oklab, var(--ink) 18%, transparent);
+background: color-mix(in oklab, var(--card) 86%, transparent);
+color: var(--ink);
+padding: 8px 12px; border-radius: 999px; font-weight: 700;
 }
-.chips li:hover{border-color: rgba(255,255,255,.24)}
-.skills{list-style:none; padding:0; margin:8px 0 0}
-.skills li{padding:10px 0; border-top:1px dashed rgba(255,255,255,.15)}
-.skills li:first-child{border-top:0}
-.timeline .hd{margin-bottom:8px}
+
+/* Skills list */
+.skills{ list-style: none; padding: 0; margin: 8px 0 0; }
+.skills li{
+padding: 10px 0;
+border-top: 1px dashed color-mix(in oklab, var(--ink) 14%, transparent);
+}
+.skills li:first-child{ border-top: 0; }
+
+/* Cases */
+.case .list{ margin: 8px 0 0 18px; }
+
+/* Timeline /
+.timeline .hd{ margin-bottom: 8px; }
 .timeline ol{
-  counter-reset: step; list-style:none; padding:0; margin:6px 0 0;
-  display:grid; gap:10px; grid-template-columns: 1fr 1fr;
+counter-reset: step; list-style: none; padding: 0; margin: 6px 0 0;
+display: grid; gap: 10px; grid-template-columns: 1fr 1fr;
 }
-@media (max-width: 680px){ .timeline ol{grid-template-columns: 1fr} }
+@media (max-width: 680px){ .timeline ol{ grid-template-columns: 1fr; } }
 .timeline li{
-  position:relative; padding:14px 14px 14px 46px; border-radius:14px;
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
-  border:1px solid rgba(255,255,255,.08);
+position: relative; padding: 14px 14px 14px 44px; border-radius: 10px;
+background: color-mix(in oklab, var(--card) 92%, transparent);
+border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
 }
 .timeline li::before{
-  counter-increment: step; content: counter(step);
-  position:absolute; top:10px; left:10px;
-  width:26px; height:26px; border-radius:50%;
-  display:grid; place-items:center; color:#081018; font-weight:900;
-  background: linear-gradient(135deg, var(--acc), var(--ok));
-  box-shadow: 0 6px 16px rgba(0,0,0,.2);
+counter-increment: step; content: counter(step);
+position: absolute; top: 10px; left: 10px;
+width: 24px; height: 24px; border-radius: 50%;
+display: grid; place-items: center;
+color: #000; font-weight: 900; font-size: 12px;
+background: #ddd; / モノトーンの丸ナンバー */
+border: 1px solid #bbb;
 }
-.footer{margin-top:22px; color:var(--mut); display:flex; justify-content:flex-end}
-.fx .card{transition: transform .25s ease, box-shadow .25s ease}
-.card:hover{transform:translateY(-2px); box-shadow: 0 20px 50px rgba(0,0,0,.42)}
-.fx .chips li{transition: transform .18s ease, border-color .2s ease}
-.chips li:hover{transform: translateY(-1px)}
+
+/* Footer */
+.footer{
+margin-top: 20px; color: var(--muted);
+display: flex; justify-content: flex-end;
+}
+
+/* ==============================
+Helpers
+============================== */
+.muted{ color: var(--muted); }
+.list{ padding-left: 18px; }
+
+/* ==============================
+No animations / No hover visuals
+============================== /
+/ 意図的に :hover の視覚変化は付けない /
+/ トランジション・アニメーションは未使用 */
+
+/* --------------------------------
+簡易チェックリスト（実装者向け）
+
+モバイル幅（375px付近）で改行・余白が崩れない
+
+見出し/本文のコントラストがAA以上（暗/明両テーマ）
+
+Tab操作で :focus-visible のリングが全要素に出る
+
+768–900pxでグリッドが1→2列に切り替わる
+
+a要素・ナビ・ボタン風リンクはホバーで見た目が変化しない
+-------------------------------- */
