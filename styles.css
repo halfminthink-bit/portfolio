@@ -1,280 +1,267 @@
 /* styles.css
 -----------------------------------------
-調整のヒント（変数だけで雰囲気を切替）
---bg / --ink：背景・本文の主従。--bgを#fff→#f5f5f5で紙感、--inkを#111→#0a0a0aで締まる。
---muted：補助テキスト濃度。#666（AA準拠）↔ #595959。
---card：カード面の明度。#f7f7f7 ↔ #f2f2f2。
---line：区切り線の存在感。rgba(0,0,0,.10〜.16)で微調整。
---radius / --gap / --maxw：角丸・余白・最大幅で“静けさ”と密度を調整。
+上級者トーンのための最小変更ポイント
+- --accent / --tint を足し、“うっすら色”の面と線を追加（AAコントラスト担保）。
+- ピルリンク（.pill）とチップ（.chip）を微配色で差別化。ホバー演出は無し。
+- そのほかは余白・タイポ・グリッドを踏襲し、密度を1段だけ上げています。
 ----------------------------------------- */
 
-:root {
-  --bg: #ffffff;
-  --ink: #111111;
-  --muted: #666666;           /* AA達成の補助色 */
-  --line: rgba(0,0,0,.12);    /* 1px 区切り線 */
-  --card: #f7f7f7;
-  --radius: 10px;             /* 6–12px角丸 */
-  --gap: 16px;                /* 8pt系：16/24/32中心 */
-  --maxw: 1080px;             /* 960–1100px推奨 */
+/* =========================
+   1) Theme Variables
+   ========================= */
+:root{
+  /* 基本モノトーン */
+  --bg:#ffffff;
+  --ink:#111111;
+  --muted:#666666;
+  --line:rgba(0,0,0,.12);
+  --card:#f7f7f7;
+  --radius:10px;
+  --gap:16px;
+  --maxw:1080px;
+
+  /* “少し色”の追加（青灰系アクセント） */
+  --accent:hsl(220 20% 32%);       /* テキスト/枠用：#3f4a5a相当（高コントラスト） */
+  --accent-ink:#ffffff;            /* アクセント面上の文字色 */
+  --tint:hsl(220 25% 96%);         /* 背景に敷く淡色：ほぼグレーに近い青灰 */
+  --tint-ink:var(--ink);           /* 淡色面上の本文色 */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f0f10;
-    --ink: #f2f2f2;
-    --muted: #b5b5b5;
-    --line: rgba(255,255,255,.16);
-    --card: #1a1a1b;
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f0f10;
+    --ink:#f2f2f2;
+    --muted:#b5b5b5;
+    --line:rgba(255,255,255,.16);
+    --card:#17191b;
+    --accent:hsl(220 20% 68%);     /* 暗背景では少し明るめに */
+    --accent-ink:#0f0f10;
+    --tint:hsl(220 15% 16%);
+    --tint-ink:#e9e9ea;
   }
 }
 
-/* ========== Base（必要最小限のリセット） ========== */
+/* =========================
+   2) Base (minimal reset)
+   ========================= */
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after{ box-sizing:border-box; }
 
-html { font-size: 16px; }
+html{ font-size:16px; }
 
-body {
-  margin: 0;
-  color: var(--ink);
-  background: var(--bg);
-  -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
+body{
+  margin:0;
+  color:var(--ink);
+  background:linear-gradient(180deg, var(--bg), var(--bg)) fixed;
+  -webkit-text-size-adjust:100%;
+  text-rendering:optimizeLegibility;
 }
 
-img { max-width: 100%; display: block; height: auto; }
+img{ max-width:100%; display:block; height:auto; }
 
-h1, h2, h3, p, ul, ol { margin: 0 0 1rem; }
-ul, ol { padding-left: 1.2em; }
+h1,h2,h3,p,ul,ol{ margin:0 0 1rem; }
+ul,ol{ padding-left:1.2em; }
 
-a {
-  color: inherit;
-  text-decoration: underline;           /* 静的：ホバー変化なし */
-  text-underline-offset: 2px;
-  text-decoration-thickness: 1px;
+a{
+  color:inherit;
+  text-decoration:underline;              /* ホバー変化なし */
+  text-underline-offset:2px;
+  text-decoration-thickness:1px;
 }
 
-/* フォーカス可視性（キーボード操作対応） */
-:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
+/* フォーカス可視性（キーボード操作） */
+:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:3px;
 }
 
-/* ========== Typography（流体スケール） ========== */
-:root {
-  --fs-hero: clamp(24px, 3.2vw, 34px);
-  --fs-h2:   clamp(20px, 2.4vw, 26px);
-  --fs-h3:   clamp(18px, 2.0vw, 22px);
-  --fs-base: 16px;
+/* =========================
+   3) Type Scale (fluid)
+   ========================= */
+:root{
+  --fs-hero:clamp(24px,3.2vw,36px);
+  --fs-h2:  clamp(20px,2.4vw,28px);
+  --fs-h3:  clamp(18px,2.0vw,22px);
+  --fs-base:16px;
 }
 
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", Meiryo, "Helvetica Neue", Arial, sans-serif;
-  font-size: var(--fs-base);
-  line-height: 1.72; /* 1.65–1.8 */
-  letter-spacing: .01em;
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,"Helvetica Neue",Arial,sans-serif;
+  font-size:var(--fs-base);
+  line-height:1.72;
+  letter-spacing:.01em;
 }
 
-.hd, h2, h3 {
-  font-weight: 700;
-  line-height: 1.25;
+.hd,h2,h3{ font-weight:700; line-height:1.25; }
+h1.hero__title{ font-size:var(--fs-hero); }
+.section > .hd,.hd{ font-size:var(--fs-h2); }
+.hd.hd--sm,h3{ font-size:var(--fs-h3); }
+.muted{ color:var(--muted); }
+
+/* =========================
+   4) Layout
+   ========================= */
+.pf{
+  max-width:var(--maxw);
+  margin-inline:auto;
+  padding-inline:22px;                 /* わずかに広げて高級感 */
+  padding-block:26px;
 }
 
-h1.hero__title { font-size: var(--fs-hero); }
-.section > .hd, .hd { font-size: var(--fs-h2); }
-.hd.hd--sm, h3 { font-size: var(--fs-h3); }
-
-.muted { color: var(--muted); }
-
-/* ========== Layout ========== */
-.pf {
-  max-width: var(--maxw);
-  margin-inline: auto;
-  padding-inline: 20px;  /* 16–20px */
-  padding-block: 24px;
+.section{ margin-block:26px; }
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:18px;
 }
 
-.section { margin-block: 24px; } /* セクション間は24–32px */
-
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px;
+.grid{
+  display:grid;
+  gap:18px;
+  grid-template-columns:1fr;
 }
 
-.grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .grid {
-    gap: 24px;
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 1→2列 */
+@media (min-width:768px){
+  .grid{
+    gap:24px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
   }
-  .card { padding: 20px; }
+  .card{ padding:22px; }
 }
 
-/* ========== Components ========== */
+/* =========================
+   5) Components
+   ========================= */
 
-/* Hero（ロゴ削除に伴い余白調整） */
-.hero {
-  display: grid;
-  gap: 16px;
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 16px;
+/* Hero：見出し帯に淡色チントを敷いて“上級感” */
+.hero{
+  display:grid;
+  gap:16px;
+  align-items:center;
+  border-bottom:1px solid var(--line);
+  padding:16px 0 18px;
+  background:
+    linear-gradient(180deg, var(--tint), transparent 80%);
+  border-radius: calc(var(--radius) - 2px);
 }
-.hero__brand {
-  display: block; /* 画像スペースを想定しないシンプル構成 */
+.hero__brand{ display:block; }
+.hero__title span{
+  font-weight:600;
+  color:var(--muted);
+  font-size:clamp(.9rem,1.6vw,1rem);
+  margin-inline-start:.25em;
 }
-.hero__title span {
-  font-weight: 600;
-  color: var(--muted);
-  font-size: clamp(.9rem, 1.6vw, 1rem);
-  margin-inline-start: .25em;
-}
-.hero__tag {
-  margin: 0;
-  color: var(--muted);
-  font-weight: 500;
-}
+.hero__tag{ margin:0; color:var(--muted); font-weight:500; }
 
-/* Hero Nav（静的ボタン風。ホバー演出なし） */
-.hero__nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px 16px;
+/* ピル型ナビ：線はアクセント、面は透明（ホバー無し） */
+.hero__nav{
+  display:flex; flex-wrap:wrap;
+  gap:12px 14px;
 }
-.hero__nav a {
-  text-decoration: none;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 6px 10px;
-}
-.hero__nav a:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+.pill{
+  text-decoration:none;
+  border:1px solid color-mix(in oklab, var(--accent) 55%, currentColor 45%);
+  border-radius:999px;
+  padding:6px 12px;
+  font-weight:600;
 }
 
-/* Chips */
-.chips {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: .5rem 0 0;
-  padding: 0;
+/* Chips：淡色面＋アクセント枠で可読性キープ */
+.chips{
+  list-style:none; display:flex; flex-wrap:wrap;
+  gap:8px; margin:.5rem 0 0; padding:0;
 }
-.chips li {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
+.chip{
+  border:1px solid color-mix(in oklab, var(--accent) 45%, var(--line) 55%);
+  background: color-mix(in oklab, var(--tint) 70%, #fff 30%);
+  border-radius:999px;
+  padding:6px 10px;
+  font-weight:600; font-size:.95rem;
 }
 
-/* Lists */
-.list { margin: .25rem 0 0; }
-.list li { margin: .25rem 0; }
+/* リスト/ケース */
+.list{ margin:.25rem 0 0; }
+.list li{ margin:.25rem 0; }
+.case .muted{ margin-top:.5rem; }
 
-/* Cases */
-.case .muted { margin-top: .5rem; }
-
-/* Skills */
-.skills {
-  list-style: none;
-  margin: .5rem 0 0;
-  padding: 0;
+/* Timeline：番号バッジだけアクセント */
+.timeline .hd{ margin-bottom:.5rem; }
+.timeline ol{
+  list-style:none; counter-reset:step;
+  display:grid; gap:12px; margin:.5rem 0 0; padding:0;
 }
-.skills li { margin: .5rem 0; }
-
-/* Timeline */
-.timeline .hd { margin-bottom: .5rem; }
-.timeline ol {
-  list-style: none;
-  counter-reset: step;
-  display: grid;
-  gap: 12px;
-  margin: .5rem 0 0;
-  padding: 0;
+.timeline li{
+  counter-increment:step;
+  display:flex; align-items:center; gap:12px;
+  padding:10px 12px;
+  border:1px dashed var(--line);
+  border-radius:8px;
+  background:linear-gradient(0deg, transparent, transparent),
+             linear-gradient(180deg, transparent, transparent);
 }
-.timeline li {
-  counter-increment: step;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px dashed var(--line);
-  border-radius: 8px;
-}
-.timeline li::before {
-  content: counter(step);
-  display: inline-grid;
-  place-items: center;
-  inline-size: 24px;
-  block-size: 24px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-  font-size: .9rem;
-  font-weight: 700;
+.timeline li::before{
+  content:counter(step);
+  display:inline-grid; place-items:center;
+  inline-size:26px; block-size:26px;
+  border-radius:50%;
+  background:var(--accent);
+  color:var(--accent-ink);
+  font-size:.9rem; font-weight:700;
 }
 
 /* Footer */
-.footer {
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: .95rem;
+.footer{
+  margin-top:32px; padding-top:16px;
+  border-top:1px solid var(--line);
+  color:var(--muted); font-size:.95rem;
 }
 
-/* Forms（拡張用の最小セット） */
-input, select, textarea, button {
-  font: inherit;
-  color: inherit;
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 8px 10px;
+/* =========================
+   6) Forms (minimal)
+   ========================= */
+input,select,textarea,button{
+  font:inherit; color:inherit;
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:8px 10px;
 }
-button, input[type="submit"] { text-decoration: none; }
-input::placeholder, textarea::placeholder { color: var(--muted); }
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-button:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
+button,input[type="submit"]{ text-decoration:none; }
+input::placeholder,textarea::placeholder{ color:var(--muted); }
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{
+  outline:2px solid currentColor; outline-offset:2px;
 }
 
-/* テキスト折返し（長いURL対策） */
-.pf, .pf * { overflow-wrap: anywhere; word-wrap: break-word; }
+/* 長いURL対策 */
+.pf, .pf *{ overflow-wrap:anywhere; word-wrap:break-word; }
 
-/* ========== Responsive Tweaks ========== */
-@media (min-width: 900px) {
-  .hero {
-    grid-template-columns: 1fr auto;
-    gap: 20px;
-    padding-bottom: 20px;
+/* =========================
+   7) Responsive Tweaks
+   ========================= */
+@media (min-width:900px){
+  .hero{
+    grid-template-columns:1fr auto;
+    gap:20px; padding-bottom:22px;
   }
-  .card { padding: 24px; }
-  .section { margin-block: 28px; }
+  .card{ padding:24px; }
+  .section{ margin-block:28px; }
 }
 
-/* ========== Motion（本件はアニメ無しを明示） ========== */
-@media (prefers-reduced-motion: reduce) {
-  * { scroll-behavior: auto; }
+/* =========================
+   8) Motion (none)
+   ========================= */
+@media (prefers-reduced-motion:reduce){
+  *{ scroll-behavior:auto; }
 }
 
-/* ========== QA Checklist（実装後の確認） ==========
-1) 320–375pxで過密にならず改行崩れがない
-2) ≥1200pxで--maxw内に収まり行長60–80字目安
-3) 本文(#111/#fff)・補助(#666)がAAコントラストを満たす
-4) Tab移動で全インタラクティブ要素に2pxアウトライン
-5) 長いURLや英数字連続がはみ出さない（overflow-wrap:anywhere）
-================================================== */
+/* =========================
+   9) Quick QA
+   -------------------------
+   [ ] 320–375pxで改行崩れなし／行間が詰まらない
+   [ ] 本文(#111)と淡色面上の文字のコントラストAA以上
+   [ ] Tab移動で全要素に2pxアウトライン
+   [ ] 長いURLがはみ出さない
+   [ ] ダークモードで彩度が上がりすぎない
+   ======================== */
