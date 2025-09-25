@@ -12,15 +12,7 @@
 <main class="pf" role="main">
   <header class="hero" aria-labelledby="site-title">
     <div class="hero__brand">
-      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true">
-        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="var(--acc)" />
-          <stop offset="1" stop-color="var(--ok)" />
-        </linearGradient></defs>
-        <rect x="8" y="8" width="48" height="48" rx="14" fill="url(#g)"/>
-        <circle cx="24" cy="26.5" r="6.2" fill="rgba(255,255,255,.9)"/>
-        <rect x="18" y="36" width="28" height="8" rx="4" fill="rgba(255,255,255,.85)"/>
-      </svg>
+      <!-- SVGを削除。テキストのみで構成 -->
       <div>
         <h1 id="site-title" class="hero__title">あいうえお<span>｜ データ分析・自動化</span></h1>
         <p class="hero__tag">面倒なことを自動化してみる</p>
@@ -100,7 +92,7 @@
   </footer>
 </main>
 <script>
-  /* テキストは変更せず、年だけ自動挿入（JS不要方針の場合は削除可） */
+  /* テキストは変更せず、年だけ自動挿入（不要なら削除可） */
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
 </script>
 </body>
