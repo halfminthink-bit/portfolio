@@ -12,25 +12,27 @@
 <main class="pf" role="main">
   <header class="hero" aria-labelledby="site-title">
     <div class="hero__brand">
-      <!-- SVGを削除。テキストのみで構成 -->
+      <!-- ロゴなし／テキストのみ -->
       <div>
         <h1 id="site-title" class="hero__title">あいうえお<span>｜ データ分析・自動化</span></h1>
         <p class="hero__tag">面倒なことを自動化してみる</p>
       </div>
     </div>
     <nav class="hero__nav" aria-label="セクション内リンク">
-      <a href="#services">できること</a>
-      <a href="#cases">実績</a>
-      <a href="#skills">スキル</a>
-      <a href="#process">進め方</a>
-      <a href="#wcm">WCM</a>
+      <a class="pill" href="#services">できること</a>
+      <a class="pill" href="#cases">実績</a>
+      <a class="pill" href="#skills">スキル</a>
+      <a class="pill" href="#process">進め方</a>
+      <a class="pill" href="#wcm">WCM</a>
     </nav>
   </header>
 
   <section id="services" class="section card">
     <h2 class="hd">できること</h2>
     <ul class="chips">
-      <li>データ分析</li><li>自動化</li><li>スクレイピング</li>
+      <li class="chip">データ分析</li>
+      <li class="chip">自動化</li>
+      <li class="chip">スクレイピング</li>
     </ul>
   </section>
 
@@ -92,7 +94,6 @@
   </footer>
 </main>
 <script>
-  /* テキストは変更せず、年だけ自動挿入（不要なら削除可） */
   document.querySelector('[data-year]').textContent = new Date().getFullYear();
 </script>
 </body>
