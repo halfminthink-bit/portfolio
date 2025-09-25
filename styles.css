@@ -17,10 +17,6 @@
   --radius: 10px;             /* 6–12px角丸 */
   --gap: 16px;                /* 8pt系：16/24/32中心 */
   --maxw: 1080px;             /* 960–1100px推奨 */
-
-  /* ロゴSVGのモノトーン化（index.htmlのlinearGradient参照） */
-  --acc: #222222;
-  --ok:  #666666;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,8 +26,6 @@
     --muted: #b5b5b5;
     --line: rgba(255,255,255,.16);
     --card: #1a1a1b;
-    --acc: #e5e5e5;
-    --ok:  #9a9a9a;
   }
 }
 
@@ -50,7 +44,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-img, svg { max-width: 100%; display: block; height: auto; }
+img { max-width: 100%; display: block; height: auto; }
 
 h1, h2, h3, p, ul, ol { margin: 0 0 1rem; }
 ul, ol { padding-left: 1.2em; }
@@ -127,7 +121,7 @@ h1.hero__title { font-size: var(--fs-hero); }
 
 /* ========== Components ========== */
 
-/* Hero */
+/* Hero（ロゴ削除に伴い余白調整） */
 .hero {
   display: grid;
   gap: 16px;
@@ -136,15 +130,7 @@ h1.hero__title { font-size: var(--fs-hero); }
   padding-bottom: 16px;
 }
 .hero__brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.logo {
-  inline-size: 56px;
-  block-size: 56px;
-  flex: none;
-  border-radius: 12px;
+  display: block; /* 画像スペースを想定しないシンプル構成 */
 }
 .hero__title span {
   font-weight: 600;
